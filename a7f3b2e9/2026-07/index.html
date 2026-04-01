@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Отчёт об успеваемости — Богдан Иванов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  :root {
+    --blue: #29ABE2; --blue-dark: #1E8FBF; --blue-light: #E8F7FC;
+    --pink: #FF6B9D; --pink-light: #FFF0F5;
+    --orange: #FFB347; --green: #4CD964; --green-light: #EAFAF0;
+    --text: #2D3748; --text-light: #718096;
+    --bg: #F7FAFC; --card-bg: #FFFFFF;
+    --radius: 16px; --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(41,171,226,0.08);
+    --shadow-hover: 0 8px 32px rgba(41,171,226,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text);
+         min-height:100vh; -webkit-font-smoothing:antialiased; }
+  .header { background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);
+             padding:24px 20px 28px; position:relative; overflow:hidden; }
+  .header::before { content:''; position:absolute; top:-40px; right:-40px;
+                    width:160px; height:160px; background:rgba(255,255,255,0.08); border-radius:50%; }
+  .header::after  { content:''; position:absolute; bottom:-20px; left:30%;
+                    width:100px; height:100px; background:rgba(255,255,255,0.05); border-radius:50%; }
+  .header-content { max-width:600px; margin:0 auto; display:flex;
+                    justify-content:space-between; align-items:center; position:relative; z-index:1; }
+  .logo { display:flex; align-items:center; gap:4px; }
+  .logo-iqra  { font-weight:900; font-size:28px; color:#fff; letter-spacing:-0.5px; }
+  .logo-kids  { background:var(--pink); color:#fff; font-weight:800; font-size:16px;
+                padding:3px 10px; border-radius:8px; margin-left:2px; }
+  .report-date { text-align:right; color:rgba(255,255,255,0.9); font-size:13px; font-weight:600; }
+  .report-date span { display:block; font-size:16px; color:#fff; font-weight:800; margin-top:2px; }
+  .main { max-width:600px; margin:0 auto; padding:20px 16px 40px; }
+  .report-title { font-size:26px; font-weight:900; color:var(--blue);
+                  margin-bottom:20px; letter-spacing:-0.3px; }
+  .info-card { background:var(--card-bg); border-radius:var(--radius);
+               padding:20px; box-shadow:var(--shadow); margin-bottom:16px; }
+  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .info-item label { display:block; font-size:11px; font-weight:700;
+                     text-transform:uppercase; letter-spacing:0.8px;
+                     color:var(--text-light); margin-bottom:4px; }
+  .info-item .value { font-size:16px; font-weight:700; color:var(--blue); }
+  .scores { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+  .score-badge { background:var(--card-bg); border-radius:var(--radius-sm);
+                 padding:14px 10px; text-align:center; box-shadow:var(--shadow);
+                 position:relative; overflow:hidden; }
+  .score-badge::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; }
+  .score-badge.activity::after { background:var(--blue); }
+  .score-badge.homework::after { background:var(--orange); }
+  .score-badge.behavior::after { background:var(--green); }
+  .score-label { font-size:11px; font-weight:700; text-transform:uppercase;
+                 letter-spacing:0.5px; color:var(--text-light); margin-bottom:6px; }
+  .score-value { font-size:28px; font-weight:900; letter-spacing:-1px; }
+  .score-badge.activity .score-value { color:var(--blue); }
+  .score-badge.homework .score-value { color:var(--orange); }
+  .score-badge.behavior .score-value { color:var(--green); }
+  .score-max { font-size:14px; font-weight:600; color:var(--text-light); }
+  .section { background:var(--card-bg); border-radius:var(--radius);
+             padding:20px; box-shadow:var(--shadow); margin-bottom:12px; }
+  .section-title { font-size:14px; font-weight:800; color:var(--text);
+                   margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .section-icon { width:28px; height:28px; border-radius:8px; display:flex;
+                  align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .section-icon.blue   { background:var(--blue-light); }
+  .section-icon.green  { background:var(--green-light); }
+  .section-icon.pink   { background:var(--pink-light); }
+  .section-icon.orange { background:#FFF5E6; }
+  .section p { font-size:14px; line-height:1.7; color:var(--text); }
+  .section ul { list-style:none; padding:0; }
+  .section ul li { font-size:14px; line-height:1.6; padding:4px 0 4px 20px;
+                   position:relative; color:var(--text); }
+  .section ul li::before { content:''; position:absolute; left:0; top:12px;
+                            width:8px; height:8px; border-radius:50%; }
+  .section.strengths   ul li::before { background:var(--green); }
+  .section.development ul li::before { background:var(--orange); }
+  .conclusion { background:linear-gradient(135deg,var(--blue-light) 0%,#F0F9FF 100%);
+                border:2px solid rgba(41,171,226,0.15); }
+  .conclusion p { color:var(--blue-dark); font-weight:600; }
+  .history-section { margin-top:32px; }
+  .history-title { font-size:18px; font-weight:800; color:var(--text);
+                   margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .history-list { display:flex; flex-direction:column; gap:8px; }
+  .history-item { background:var(--card-bg); border-radius:var(--radius-sm);
+                  padding:14px 18px; box-shadow:var(--shadow); display:flex;
+                  justify-content:space-between; align-items:center;
+                  text-decoration:none; color:var(--text); transition:all 0.2s ease; }
+  .history-item:hover { box-shadow:var(--shadow-hover); transform:translateY(-1px); }
+  .history-item.current { border:2px solid var(--blue); background:var(--blue-light); }
+  .h-date  { font-weight:700; font-size:15px; }
+  .h-label { font-size:12px; font-weight:700; color:var(--blue);
+             background:var(--blue-light); padding:3px 10px; border-radius:6px; }
+  .history-item.current .h-label { background:var(--blue); color:#fff; }
+  .footer { text-align:center; padding:24px 16px 32px; max-width:600px; margin:0 auto; }
+  .footer p { font-size:12px; color:var(--text-light); font-weight:600; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .info-card   { animation:fadeUp 0.4s ease both; animation-delay:0.1s; }
+  .scores      { animation:fadeUp 0.4s ease both; animation-delay:0.2s; }
+  .section:nth-child(1) { animation:fadeUp 0.4s ease both; animation-delay:0.25s; }
+  .section:nth-child(2) { animation:fadeUp 0.4s ease both; animation-delay:0.3s;  }
+  .section:nth-child(3) { animation:fadeUp 0.4s ease both; animation-delay:0.35s; }
+  .section:nth-child(4) { animation:fadeUp 0.4s ease both; animation-delay:0.4s;  }
+  .section:nth-child(5) { animation:fadeUp 0.4s ease both; animation-delay:0.45s; }
+  .section:nth-child(6) { animation:fadeUp 0.4s ease both; animation-delay:0.5s;  }
+  .history-section { animation:fadeUp 0.4s ease both; animation-delay:0.55s; }
+  @media (max-width:400px) {
+    .scores { grid-template-columns:1fr; }
+    .info-grid { grid-template-columns:1fr; gap:12px; }
+    .report-title { font-size:22px; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-content">
+    <div class="logo">
+      <span class="logo-iqra">iqra</span>
+      <span class="logo-kids">kids</span>
+    </div>
+    <div class="report-date">
+      Дата отчета
+      <span>18.07.2026</span>
+    </div>
+  </div>
+</div>
+<div class="main">
+  <h1 class="report-title">Отчёт об успеваемости</h1>
+  <div class="info-card">
+    <div class="info-grid">
+      <div class="info-item"><label>ФИО</label><div class="value">Богдан Иванов</div></div>
+      <div class="info-item"><label>Предмет</label><div class="value">Қазақ тілі</div></div>
+      <div class="info-item"><label>Группа</label><div class="value">KZ_45RO15</div></div>
+      <div class="info-item"><label>Преподаватель</label><div class="value">Жазина Айсана</div></div>
+    </div>
+  </div>
+  <div class="scores">
+    <div class="score-badge activity">
+      <div class="score-label">Активность</div>
+      <div class="score-value">10<span class="score-max">/10</span></div>
+    </div>
+    <div class="score-badge homework">
+      <div class="score-label">Дом. задание</div>
+      <div class="score-value">10<span class="score-max">/10</span></div>
+    </div>
+    <div class="score-badge behavior">
+      <div class="score-label">Поведение</div>
+      <div class="score-value">10<span class="score-max">/10</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title"><div class="section-icon blue"><i class="fa-solid fa-clipboard-list"></i></div>Общая характеристика ученика</div>
+    <p>Богдан находится на начальном этапе изучения казахского языка, при этом демонстрирует хорошую вовлечённость и старание.</p>
+  </div>
+  <div class="section strengths">
+    <div class="section-title"><div class="section-icon green"><i class="fa-solid fa-star"></i></div>Сильные стороны</div>
+    <ul><li>Ответственность</li>
+      <li>Активное участие в занятиях</li>
+      <li>Старательность</li>
+      <li>Понимание базовых инструкций</li></ul>
+  </div>
+  <div class="section development">
+    <div class="section-title"><div class="section-icon orange"><i class="fa-solid fa-bullseye"></i></div>Зоны для развития</div>
+    <ul><li>Расширение словарного запаса</li>
+      <li>Формирование навыков устной речи</li>
+      <li>Закрепление базовой грамматики</li></ul>
+  </div>
+  <div class="section">
+    <div class="section-title"><div class="section-icon blue"><i class="fa-solid fa-chart-line"></i></div>Динамика</div>
+    <p>Наблюдается положительная динамика, ученик постепенно улучшает свои результаты.</p>
+  </div>
+  <div class="section">
+    <div class="section-title"><div class="section-icon pink"><i class="fa-solid fa-lightbulb"></i></div>Рекомендации</div>
+    <p>Продолжать регулярную практику, уделять внимание повторению и закреплению материала.</p>
+  </div>
+  <div class="section conclusion">
+    <div class="section-title"><div class="section-icon blue"><i class="fa-solid fa-trophy"></i></div>Вывод</div>
+    <p>Для своего уровня ученик показывает хорошие результаты и положительное отношение к обучению.</p>
+  </div>
+  <div class="history-section">
+    <div class="history-title"><i class="fa-solid fa-calendar-days" style="color:#29ABE2;margin-right:8px;"></i>История отчётов</div>История отчётов</div>
+    <div class="history-list">
+      <a href="#" class="history-item current">
+        <span class="h-date">Июль 2026</span>
+        <span class="h-label">Текущий</span>
+      </a>
+      <a href="../2026-06/" class="history-item">
+        <span class="h-date">Июнь 2026</span>
+        <span class="h-label">Посмотреть</span>
+      </a>
+      <a href="../2026-05/" class="history-item">
+        <span class="h-date">Май 2026</span>
+        <span class="h-label">Посмотреть</span>
+      </a>
+      <a href="../2026-04/" class="history-item">
+        <span class="h-date">Апрель 2026</span>
+        <span class="h-label">Посмотреть</span>
+      </a>
+      <a href="../2026-03/" class="history-item">
+        <span class="h-date">Март 2026</span>
+        <span class="h-label">Посмотреть</span>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="footer">
+  <p>© 2026 iqra kids — Отчёт сформирован автоматически</p>
+</div>
+</body>
+</html>
